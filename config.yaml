@@ -11,10 +11,16 @@ config_settings:
         default: https://api.swiftype.com/api/v1
         updateable: 1
     SwiftypeAPIKey:
+        default: ~
         updateable: 1
     SwiftypeEngineSlug:
+        default: ~
         updateable: 1
     SwiftypeDomainID:
+        default: ~
+        updateable: 1
+    SwiftypeTimeout:
+        default: 20
         updateable: 1
     SwiftypeDebug:
         default: 0
