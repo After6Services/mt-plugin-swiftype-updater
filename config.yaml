@@ -4,7 +4,7 @@ key:  SwiftypeUpdater
 author_name: Endevver LLC
 author_link: http://endevver.com/
 description: A plugin which updates the Swiftype site search index regarding local content changes
-version: 0.9
+version: v1.0.0
 
 config_settings:
     SwiftypeAPIEndpoint:
