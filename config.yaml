@@ -1,0 +1,30 @@
+name: Swiftype Updater
+id:   SwiftypeUpdater
+key:  SwiftypeUpdater
+author_name: Endevver LLC
+author_link: http://endevver.com/
+description: A plugin which updates the Swiftype site search index regarding local content changes
+version: 0.9
+
+config_settings:
+    SwiftypeAPIEndpoint:
+        default: https://api.swiftype.com/api/v1
+        updateable: 1
+    SwiftypeAPIKey:
+        updateable: 1
+    SwiftypeEngineSlug:
+        updateable: 1
+    SwiftypeDomainID:
+        updateable: 1
+    SwiftypeDebug:
+        default: 0
+        updateable: 1
+
+callbacks:
+    build_file: $SwiftypeUpdater::SwiftypeUpdater::Callbacks::build_file
+    post_delete_archive_file: $SwiftypeUpdater::SwiftypeUpdater::Callbacks::post_delete
+
+task_workers:
+    swiftype_update:
+        label: Updates Swiftype site search index about content changes
+        class: SwiftypeUpdater::Worker::Update
