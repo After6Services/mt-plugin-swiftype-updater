@@ -30,7 +30,6 @@ sub work {
         debug       => $cfg->SwiftypeDebug,
     );
 
-    $job->did_something(1);
 
     my @urls;
     foreach my $job ( @jobs ) {
@@ -48,14 +47,15 @@ sub work {
 
 sub _find_coalescing_jobs {
     my $job  = shift;
-    my @jobs = ( $job );
+    my @jobs;
     if ( my $key = $job->coalesce ) {
         my $ts   = MT::TheSchwartz->instance;
         my $func = $ts->can('find_job_with_coalescing_value');
-        while ( my $job = $func->( $ts, __PACKAGE__, $key )) {
-            push @jobs, $job;
+        while ( my $j = $func->( $ts, __PACKAGE__, $key )) {
+            push @jobs, $j;
         }
     }
+    push @jobs, $job;
     return @jobs
 }
 
