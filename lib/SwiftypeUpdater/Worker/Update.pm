@@ -2,8 +2,10 @@ package SwiftypeUpdater::Worker::Update;
 
 use strict;
 use v5.10;
+use base qw( TheSchwartz::Worker );
 use TheSchwartz::Job;
 use MT::TheSchwartz;
+use SwiftypeUpdater::API;
 
 sub grab_for    { 60 }
 sub max_retries { 100000 }
@@ -31,7 +33,7 @@ sub work {
     my @urls;
     foreach my $job ( @jobs ) {
         my ( $method, $url ) = _url_from_job( $job );
-        next unless $url;
+        next unless $method && $url;
 
         if ( $st->$method( $url )) {
             $job->completed();
@@ -40,6 +42,7 @@ sub work {
             $job->failed( 'Error during recrawl: ' . $st->errstr );
         }
     }
+    $job->did_something(1);
 }
 
 sub _find_coalescing_jobs {
@@ -65,7 +68,7 @@ sub _url_from_job {
         my $entry     = $arg->{entry};
         my $blog      = $entry->blog;
         my $permalink = $entry->permalink;
-        ...;
+        # ...;
     }
     else {
         $method = 'crawl_url';
@@ -78,8 +81,8 @@ sub _url_from_job {
                                          . $fi->file_path );
             }
         }
-    }
-    return $url;
+    }    
+    return ( $method, $url );
 }
 
 sub _url_from_fileinfo {

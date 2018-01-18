@@ -121,7 +121,7 @@ sub crawl_url {
     my $response = $self->client->PUT( $path, $encoded_data, \%headers );
     $self->debug and say STDERR $response->responseContent();
 
-    return 1 if $response->responseCode() == 200;
+    return 1 if $response->responseCode() =~ m{2\d\d};
 
     my $msg
         = sprintf "ERROR: crawl_url of %s failed with %s error: %s\n",
@@ -162,7 +162,7 @@ sub destroy_url {
     my $response = $self->client->DELETE($path, \%headers);
     $self->debug and say STDERR $response->responseContent();
 
-    return 1 if $response->responseCode() == 200;
+    return 1 if $response->responseCode() =~ m{2\d\d};
 
     my $msg = sprintf "ERROR: destroy_url of %s failed with %s error: %s\n",
                     $url->as_string,
