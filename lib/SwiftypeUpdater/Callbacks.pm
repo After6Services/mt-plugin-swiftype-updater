@@ -11,6 +11,8 @@ sub build_file {
     my $fi            = $args{file_info};
     my $ctx           = $args{context};
 
+    return if $args{file} =~ m{\.xml$};
+
     MT::TheSchwartz->insert(
         TheSchwartz::Job->new(
             funcname  => 'SwiftypeUpdater::Worker::Update',
