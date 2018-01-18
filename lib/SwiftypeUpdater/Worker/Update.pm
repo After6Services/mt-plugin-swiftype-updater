@@ -30,6 +30,8 @@ sub work {
         debug       => $cfg->SwiftypeDebug,
     );
 
+    $job->did_something(1);
+
     my @urls;
     foreach my $job ( @jobs ) {
         my ( $method, $url ) = _url_from_job( $job );
@@ -42,7 +44,6 @@ sub work {
             $job->failed( 'Error during recrawl: ' . $st->errstr );
         }
     }
-    $job->did_something(1);
 }
 
 sub _find_coalescing_jobs {
@@ -63,12 +64,8 @@ sub _url_from_job {
     my ( $method, $url );
     if ( $job->uniqkey =~ m{^delete} ) {
         $method = 'destroy_url';
-        my $arg       = $job->arg;
-        my $file      = $arg->{file};
-        my $entry     = $arg->{entry};
-        my $blog      = $entry->blog;
-        my $permalink = $entry->permalink;
-        # ...;
+        $url    = $job->arg
+            or $job->permanent_failure( 'No URL for deleted file' );
     }
     else {
         $method = 'crawl_url';

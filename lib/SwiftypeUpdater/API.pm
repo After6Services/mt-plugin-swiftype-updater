@@ -39,10 +39,7 @@ has 'timeout' => (
 has 'useragent' => (
     is      => 'lazy',
     default => sub { 'LWP::UserAgent' },
-    coerce => sub {
-        # say STDERR "In useragent coerce with $_[0]";
-        ref($_[0]) ? $_[0] : $_[0]->new;
-    }
+    coerce  => sub { ref($_[0]) ? $_[0] : $_[0]->new },
 );
 
 has 'domain_id' => (
@@ -100,10 +97,7 @@ sub crawl_url {
         , $self->domain_id
     );
 
-    my $data = {
-        # auth_token => $self->key,
-        url        => $url->as_string,
-    };
+    my $data         = { url => $url->as_string };
     my $encoded_data = encode_utf8(encode_json($data));
 
     my $h = HTTP::Headers->new();
@@ -150,7 +144,6 @@ sub destroy_url {
 
     my $h = HTTP::Headers->new();
     $h->authorization_basic( $self->key );
-    # $h->content_type('application/json; charset=UTF-8');
     my %headers = $h->flatten;
 
     if ( my $db = $self->debug ) {
