@@ -9,6 +9,7 @@ use URI;
 use JSON;
 use Encode qw(encode_utf8);
 use Data::Printer;
+use HTTP::Headers::Fast; #Added by Dave Aiello, 08/18/2021
 
 extends 'MT::ErrorHandler';
 
@@ -100,19 +101,19 @@ sub crawl_url {
     my $data         = { url => $url->as_string };
     my $encoded_data = encode_utf8(encode_json($data));
 
-    my $h = HTTP::Headers->new();
+    my $h = HTTP::Headers::Fast->new;
     $h->authorization_basic( $self->key );
     $h->content_type('application/json; charset=UTF-8');
-    my %headers = $h->flatten;
+    my $headers = $h->flatten; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
 
     if ( my $db = $self->debug ) {
         say STDERR "crawl_url API call: PUT $path with body "
                     .np($data);
-        p %headers;
+        p $headers; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
         return 1 if $db =~ m{NoCalls(\b|Crawl)}i;
     }
 
-    my $response = $self->client->PUT( $path, $encoded_data, \%headers );
+    my $response = $self->client->PUT( $path, $encoded_data, { $headers } );
     $self->debug and say STDERR $response->responseContent();
 
     return 1 if $response->responseCode() =~ m{2\d\d};
@@ -142,17 +143,17 @@ sub destroy_url {
         , $url->as_string
     );
 
-    my $h = HTTP::Headers->new();
+    my $h = HTTP::Headers::Fast->new;
     $h->authorization_basic( $self->key );
-    my %headers = $h->flatten;
+    my $headers = $h->flatten; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
 
     if ( my $db = $self->debug ) {
         say STDERR "destroy_url API call: DELETE $path";
-        p %headers;
+        p $headers; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
         return 1 if $db =~ m{NoCalls(\b|Destroy)}i;
     }
 
-    my $response = $self->client->DELETE($path, \%headers);
+    my $response = $self->client->DELETE($path, @{$headers});
     $self->debug and say STDERR $response->responseContent();
 
     return 1 if $response->responseCode() =~ m{2\d\d};
