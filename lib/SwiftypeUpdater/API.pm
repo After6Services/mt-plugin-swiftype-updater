@@ -105,16 +105,16 @@ sub crawl_url {
     my $h = HTTP::Headers::Fast->new;
     # $h->authorization_basic( $self->key ); Key cannot be passed via authentication_basic header, per https://swiftype.com/documentation/site-search/api-crawler-operations#crawl-url .
     $h->content_type('application/json; charset=UTF-8');
-    my $headers = $h->flatten; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
+    my %headers = $h->flatten;
 
     if ( my $db = $self->debug ) {
         say STDERR "crawl_url API call: PUT $path with body "
                     .np($data);
-        p $headers; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
+        p %headers;
         return 1 if $db =~ m{NoCalls(\b|Crawl)}i;
     }
 
-    my $response = $self->client->PUT( $path, $encoded_data, { $headers } );
+    my $response = $self->client->PUT( $path, $encoded_data, \%headers );
     $self->debug and say STDERR $response->responseContent();
 
     return 1 if $response->responseCode() =~ m{2\d\d};
