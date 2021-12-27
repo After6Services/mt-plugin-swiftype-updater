@@ -114,7 +114,7 @@ sub crawl_url {
         return 1 if $db =~ m{NoCalls(\b|Crawl)}i;
     }
 
-    my $response = $self->client->PUT( $path, $encoded_data, { $headers } );
+    my $response = $self->client->PUT( $path, $encoded_data, %$headers );
     $self->debug and say STDERR $response->responseContent();
 
     return 1 if $response->responseCode() =~ m{2\d\d};
