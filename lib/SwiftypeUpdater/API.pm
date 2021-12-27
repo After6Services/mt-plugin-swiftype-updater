@@ -99,7 +99,7 @@ sub crawl_url {
     );
 
     my $data         = { url => $url->as_string,
-                         auth_token => $self->key->as_string }; # Key must be passed as auth_token, per https://swiftype.com/documentation/site-search/api-crawler-operations#crawl-url .
+                         auth_token => $self->key }; # Key must be passed as auth_token, per https://swiftype.com/documentation/site-search/api-crawler-operations#crawl-url .
     my $encoded_data = encode_utf8(encode_json($data));
 
     my $h = HTTP::Headers::Fast->new;
