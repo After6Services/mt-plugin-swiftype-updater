@@ -98,11 +98,12 @@ sub crawl_url {
         , $self->domain_id
     );
 
-    my $data         = { url => $url->as_string };
+    my $data         = { url => $url->as_string,
+                         auth_token => $self->key->as_string }; # Key must be passed as auth_token, per https://swiftype.com/documentation/site-search/api-crawler-operations#crawl-url .
     my $encoded_data = encode_utf8(encode_json($data));
 
     my $h = HTTP::Headers::Fast->new;
-    $h->authorization_basic( $self->key );
+    # $h->authorization_basic( $self->key ); Key cannot be passed via authentication_basic header, per https://swiftype.com/documentation/site-search/api-crawler-operations#crawl-url .
     $h->content_type('application/json; charset=UTF-8');
     my $headers = $h->flatten; # Trying $headers instead of %headers, per https://stackoverflow.com/questions/17298127/reference-found-where-even-sized-list-expected-in-perl-possible-pass-by-refere, Dave Aiello, 08/19/2021
 

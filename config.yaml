@@ -1,10 +1,10 @@
 name: Swiftype Updater
 id:   SwiftypeUpdater
 key:  SwiftypeUpdater
-author_name: Endevver LLC
-author_link: http://endevver.com/
-description: A plugin which updates the Swiftype site search index regarding local content changes
-version: v1.0.1
+author_name: After6 Services LLC
+author_link: http://after6services.com/
+description: A plugin which updates the Swiftype site search index regarding local content changes. Inherited from Endevver LLC.
+version: v1.1.0
 
 config_settings:
     SwiftypeAPIEndpoint:
