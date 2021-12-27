@@ -105,7 +105,7 @@ sub crawl_url {
     my $h = HTTP::Headers::Fast->new;
     # $h->authorization_basic( $self->key ); Key cannot be passed via authentication_basic header, per https://swiftype.com/documentation/site-search/api-crawler-operations#crawl-url .
     $h->content_type('application/json; charset=UTF-8');
-    my $headers = (); ## added as a test
+    my %headers = ();
     %headers = $h->flatten;
 
     if ( my $db = $self->debug ) {
